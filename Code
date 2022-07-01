@@ -1,0 +1,21 @@
+#include <iostream>
+int main() // 1 / 7 / 65
+{
+    int a, b, c; a = 10; b = 20; c = 30; //กำหนดตัวแปร 
+    if (a > b) //ถ้า a > b
+    {
+        if (a > c) //ถ้า a > c
+            printf("Max Numeber is; % d", a); //ถ้าใช่ให้โชว์ค่า a
+        else
+            printf("Max Numeber is ; %d", c); //ถ้าไม่ใช่ให้โชว์ค่า c
+    }
+    else //ถ้าไม่ใช่ a > b ก็คือ b > a 
+    {
+        if (b > c) //ถ้า b > c
+            printf("Max Numeber is ; %d", b); //ถ้าใช่ให้โชว์ค่า b
+        else
+            printf("Max Numeber is ; %d", c); //ถ้าไม่ใช่ให้โชว์ค่า c
+
+    }
+    return 0;
+}
