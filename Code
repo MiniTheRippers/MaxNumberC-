@@ -1,5 +1,5 @@
 #include <iostream>
-int main() // 1 / 7 / 65
+int main() //Date 1 / 7 / 65
 {
     int a, b, c; a = 10; b = 20; c = 30; //กำหนดตัวแปร 
     if (a > b) //ถ้า a > b
