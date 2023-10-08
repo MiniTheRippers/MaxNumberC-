@@ -1,0 +1,115 @@
+#define BLYNK_PRINT Serial
+#define BLYNK_TEMPLATE_ID "TMPL6gtm0IH00"
+#define BLYNK_TEMPLATE_NAME "Distance"
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <Servo.h>
+#define trig1  D1
+#define echo1  D2
+#define trig2  D6
+#define echo2  D7
+//servo part
+Servo servo1;
+Servo servo2;
+//ir part
+int IR_Pin1 = D5;
+int IR_Pin2 = D4;
+int val1 = 0;
+int val2 = 0;
+//blynklcd
+WidgetLCD LCD1(V1);
+WidgetLCD LCD2(V2);
+//auth blynk
+char auth[] = "lSAya2wTQQ-v72HESjCga9wITyFbhDFw";
+char ssid[] = "KONG";
+char pass[] = "0852873700";
+BlynkTimer timer;
+
+void setup()
+{
+  servo1.attach(D3);
+  servo1.write(0);
+  servo2.attach(D8);
+  servo2.write(0);
+  pinMode(trig1, OUTPUT);
+  pinMode(echo1, INPUT);
+  pinMode(trig2, OUTPUT);
+  pinMode(echo2, INPUT);
+  pinMode(IR_Pin1, INPUT); 
+  Blynk.begin(auth, ssid, pass,"blynk.cloud", 80);
+  timer.setInterval(1000L, sendSensor);
+  delay(500);
+  Serial.begin(9600);
+}
+void loop()
+{ 
+  long duration,cm;
+  digitalWrite(trig1, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig1, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig1, LOW);
+  duration = pulseIn(echo1, HIGH);
+  cm = (duration/2) / 29.1;
+  Serial.print("Distance1 = ");  
+  Serial.println(cm); 
+  if(cm < 6){
+    servo1.write(180);
+    delay(10000);
+    servo1.write(0);
+    delay(500);
+  }
+  else if(cm > 6){
+    servo1.write(0);
+    delay(500);
+  }
+  long durationtwo,cm2;
+  digitalWrite(trig2, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trig2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trig2, LOW);
+  durationtwo = pulseIn(echo2, HIGH);
+  cm2 = (durationtwo/2) / 29.1;
+  Serial.print("Distance2 = ");      
+  Serial.println(cm2);
+  
+  if(cm2 < 6){
+    servo2.write(180);
+    delay(10000);
+    servo2.write(0);
+    delay(500);
+  }
+  else if(cm2 > 6){
+    servo2.write(0);
+    delay(500);
+  }
+  Blynk.run();
+  timer.run();
+}
+void sendSensor()
+{  val1 = digitalRead(IR_Pin1);
+   Serial.print("val1 = ");
+   Serial.println(val1);
+   val2 = digitalRead(IR_Pin2);
+   Serial.print("val2 = ");
+   Serial.println(val2);     
+   if(val1==1){
+       LCD1.clear();
+       LCD1.print(2,0,"ลานจอดรถ");
+       LCD1.print(1,1,"1 = ว่าง");
+     }
+   else if(val1==0) {
+       LCD1.clear();
+       LCD1.print(2,0,"ลานจอดรถ");
+       LCD1.print(1,1,"1 = ไม่ว่าง");
+      }
+   if(val2==1){
+       LCD2.clear();
+       LCD2.print(1,1,"2 = ว่าง");
+      }
+   else if(val2==0){
+       LCD2.clear();
+       LCD2.print(1,1,"2 = ไม่ว่าง");
+      }            
+}
